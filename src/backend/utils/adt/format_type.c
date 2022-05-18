@@ -128,8 +128,8 @@ format_type_extended(Oid type_oid, int32 typemod, bits16 flags)
 			return pstrdup("-");
 	}
 
-	if (sql_dialect == SQL_DIALECT_TSQL)
-		return tsql_format_type_extended_hook(type_oid, typemod, flags);
+	if (sql_dialect == SQL_DIALECT_TSQL && tsql_format_type_extended_hook)
+		return (*tsql_format_type_extended_hook)(type_oid, typemod, flags);
 
 	tuple = SearchSysCache1(TYPEOID, ObjectIdGetDatum(type_oid));
 	if (!HeapTupleIsValid(tuple))
